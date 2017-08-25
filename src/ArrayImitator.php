@@ -7,11 +7,20 @@ namespace Arrayzy;
  * and some could return a new instance of ObjectOrientedArray.
  * This class repeats the PHP built-in functions behavior.
  *
+ * @method Extend\Nested nested()
  * @author Victor Bocharsky <bocharsky.bw@gmail.com>
  */
 class ArrayImitator extends AbstractArray
 {
     // The public method list ordered by ASC
+
+    /**
+     * Default value to return if no required key doesn't exist.
+     *
+     * @var mixed
+     */
+    protected $defaultValue = null;
+
 
     /**
      * Add a new element to the current array.
@@ -279,5 +288,40 @@ class ArrayImitator extends AbstractArray
         }
 
         return $this;
+    }
+
+    /**
+     * Allow use classes described with namespace Arrayzy\Extend\<ucfirst name called function>
+     *
+     * @param $name
+     * @param $arguments
+     * @return mixed
+     */
+    public function __call($name, $arguments)
+    {
+        $class = __NAMESPACE__  . '\\Extend\\' . ucfirst($name);
+        if (!class_exists($class)) {
+            throw new Exception('Class ' . $class  .  ' does not exist');
+        }
+        $object = new $class($this);
+        return $object;
+    }
+
+    /**
+     * Set default value.
+     *
+     * @param mixed $value
+     */
+    public function setDefaultValue($value)
+    {
+        $this->defaultValue = $value;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultValue()
+    {
+        return $this->defaultValue;
     }
 }

@@ -17,6 +17,7 @@ use ArrayIterator;
 use Countable;
 use IteratorAggregate;
 use Traversable;
+use Exception;
 
 /**
  * Defines common methods and method signatures.
@@ -624,7 +625,7 @@ abstract class AbstractArray implements
     {
         return isset($this->elements[$offset])
             ? $this->elements[$offset]
-            : null
+            : $this->getDefaultValue()
         ;
     }
 
@@ -699,4 +700,5 @@ abstract class AbstractArray implements
     {
         return array_search($element, $this->elements, true);
     }
+
 }

@@ -820,4 +820,54 @@ class ArrayImitatorTest extends AbstractArrayTest
 
         $this->assertMutable($arrayzy, $resultArrayzy, $resultArray);
     }
+
+    /**
+     * @dataProvider simpleArrayProvider
+     *
+     * @param array $array
+     */
+    public function testNested()
+    {
+        $array = ['one' => 'yes_one',
+            'two' => [
+                'two_2' => 'yes_two_2',
+                'two_3' => ['three' => 'yes_three'],
+            ]
+        ];
+
+        $arrayzy = new A($array);
+
+        $answer = $arrayzy->nested()->has('one');
+        $this->assertTrue($answer);
+
+        $answer = $arrayzy->nested()->has('two.two_2');
+        $this->assertTrue($answer);
+
+        $answer = $arrayzy->nested()->has('two.two_3');
+        $this->assertTrue($answer);
+        $answer = $arrayzy->nested()->has('two.two_3.three');
+        $this->assertTrue($answer);
+
+        $answer = $arrayzy->nested()->get('one');
+        $this->assertEquals('yes_one', $answer);
+
+        $answer = $arrayzy->nested()->get('two.two_2');
+        $this->assertEquals($array['two']['two_2'], $answer);
+
+        $answer = $arrayzy->nested()->get('two.two_3.three');
+        $this->assertEquals($array['two']['two_3']['three'], $answer);
+
+        $answer = $arrayzy->nested()->has('kin.dza');
+        $this->assertFalse($answer);
+
+        $answer = $arrayzy->nested()->get('kin.dza');
+        $this->assertEquals($arrayzy->getDefaultValue(), $answer);
+
+        $arrayzy->setDefaultValue('no');
+        $answer = $arrayzy->nested()->get('kin.dza');
+        $this->assertEquals('no', $answer);
+
+
+    }
+
 }

@@ -206,6 +206,35 @@ print $a->offsetGet(1); // 'b'
 **NOTE:** *The following methods and principles apply to the `ArrayImitator` class.
 In the examples provided below the `ArrayImitator` aliased with `A`.*
 
+### Use custom default value
+
+``` php
+use Arrayzy\ArrayImitator as A;
+$a = A::create([]);
+
+$a['foo']; // null
+
+$a->setDefaultValue('no');
+$a['foo']; // 'no'
+
+```
+
+
+### Get value from nested array
+
+You can check or get the values from nested array:
+
+``` php
+use Arrayzy\ArrayImitator as A;
+$a = A::create(['a' => ['aa' => 'bb'], 'b']);
+
+$a->nested()->has('a.aa') // true
+$a->nested()->has('a.aaa') // false
+
+$a->nested()->get('a.aa') // bb
+$a->nested()->get('a.aaa') // null
+```
+
 ### Chaining
 
 Methods may be chained for ease of use:
